@@ -9,11 +9,12 @@ import {
 
 export const Cart = () => {
   const { cartItems } = useSelector((state: IRootState) => state.cart);
-//   console.log(cartItems);
-    const dispatch = useDispatch<any>();
 
-  const handleIncreaseQty = (item: ICartItems) => {};
-  const handleDecraseQty = (item: ICartItems) => {};
+  const dispatch = useDispatch<any>();
+
+  if (!cartItems.length) {
+    return <Typography>No cart items are added...</Typography>;
+  }
 
   return (
     <Stack
