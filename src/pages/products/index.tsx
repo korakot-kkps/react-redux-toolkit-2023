@@ -20,7 +20,7 @@ export const Products = () => {
   if (isLoading) {
     return <Typography>Loading ...</Typography>;
   }
-  if (!cartItems) {
+  if (!cartItems.length) {
     return <Typography>No cart items are added...</Typography>;
   }
 
