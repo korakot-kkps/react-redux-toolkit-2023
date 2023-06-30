@@ -45,6 +45,7 @@ export const Products = () => {
                   <img
                     style={{
                       height: "100%",
+                      maxWidth: "300px",
                     }}
                     src={item.thumbnail}
                   />
@@ -57,18 +58,17 @@ export const Products = () => {
                 >
                   <Typography
                     sx={{
-                      flex: "1",
-                      color: "#6f6c6c",
-                      fontSize: "14px",
+                      color: "#000",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      whiteSpace: "flex-wrap",
+                      textOverflow: "hidden",
+                      width: "100%",
+                      justifyContent: "center",
                     }}
                   >
                     {item.title}
                   </Typography>
-                  <Typography sx={{ color: "#6f6c6c", fontSize: "14px" }}>
-                    Price : {item.price}
-                  </Typography>
-                </Box>
-                <Box>
                   <Typography
                     sx={{
                       color: "#000",
@@ -78,6 +78,17 @@ export const Products = () => {
                       textOverflow: "hidden",
                       width: "100%",
                       justifyContent: "center",
+                    }}
+                  >
+                    Price : {item.price}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography
+                    sx={{
+                      flex: "1",
+                      color: "#6f6c6c",
+                      fontSize: "14px",
                     }}
                   >
                     {item.description}
@@ -105,6 +116,19 @@ export const Products = () => {
                   >
                     Add to Cart
                   </Button>
+                </Box>
+                <Box
+                  sx={{
+                    color: "#000",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    whiteSpace: "flex-wrap",
+                    textOverflow: "hidden",
+                    width: "100%",
+                    justifyContent: "right",
+                  }}
+                >
+                  <Typography>Stock : {item.stock}</Typography>
                 </Box>
               </Box>
             ))}
