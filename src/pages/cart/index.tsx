@@ -5,7 +5,7 @@ import {
   ICartItems,
   addToCart,
   removeFromCart,
-} from "../../feature/carslice/index";
+} from "../../feature/cartslice/index";
 
 export const Cart = () => {
   const { cartItems } = useSelector((state: IRootState) => state.cart);

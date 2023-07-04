@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IProduct, callProductListApi } from "../../feature/productslice";
 import { IRootState } from "../../store";
-import { addToCart } from "../../feature/carslice";
+import { addToCart } from "../../feature/cartslice";
 
 export const Products = () => {
   const dispatch = useDispatch<any>(); /*Needed <any>*/
@@ -107,14 +107,19 @@ export const Products = () => {
                   <Button
                     onClick={() => dispatch(addToCart(item))}
                     disabled={
-                      cartItems && cartItems.length > 0
-                        ? cartItems
-                            .map((cartItem) => cartItem.id)
-                            .indexOf(item.id) !== -1
-                        : false
+                      cartItems.filter((cartItem) => cartItem.id === item.id).length > 0
+                      ? cartItems.filter((cartItem) => cartItem.id === item.id)[0].quantity >= item.stock
+                          :false
                     }
                   >
-                    Add to Cart
+                    Add to Cart{" "}
+                    {cartItems.filter((cartItem) => cartItem.id === item.id)
+                      .length > 0
+                      ? cartItems.filter(
+                          (cartItem) => cartItem.id === item.id
+                        )[0].quantity
+                      : 0}
+                    &nbsp;of {item.stock}
                   </Button>
                 </Box>
                 <Box
