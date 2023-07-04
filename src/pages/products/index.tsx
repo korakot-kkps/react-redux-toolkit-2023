@@ -1,9 +1,23 @@
-import { Stack, Typography, Box, Button, Divider } from "@mui/material";
+import { Stack, Typography, Box, Button, Modal } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IProduct, callProductListApi } from "../../feature/productslice";
+import { IProduct, callProductListApi, callUpdateProductApi } from "../../feature/productslice";
 import { IRootState } from "../../store";
 import { addToCart } from "../../feature/cartslice";
+import React from "react";
+
+const modalStyle = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  // width: 400,
+  height: "100%",
+  bgcolor: "background.paper",
+  border: "0px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 export const Products = () => {
   const dispatch = useDispatch<any>(); /*Needed <any>*/
@@ -17,9 +31,20 @@ export const Products = () => {
     dispatch(callProductListApi());
   }, []);
 
+  const [openModal, setOpenModal] = React.useState(false);
+  const [modalImage, setModalImage] = React.useState("");
+  const handleOpenModal = (imgUrl: string) => {
+    setModalImage(imgUrl);
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setModalImage("");
+    setOpenModal(false);
+  };
+
   if (isLoading) {
     return <Typography>Loading ...</Typography>;
-    } 
+  }
   return (
     <Stack
       sx={{
@@ -28,7 +53,18 @@ export const Products = () => {
         gap: "40px",
       }}
     >
-      <>
+      <> 
+        <Button onClick={() => dispatch(callUpdateProductApi())}>Test Update</Button>
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <img style={{ height: "100%" }} src={modalImage} />
+          </Box>
+        </Modal>
         {productList && productList.length < 1
           ? null
           : productList.map((item) => (
@@ -48,6 +84,7 @@ export const Products = () => {
                       maxWidth: "300px",
                     }}
                     src={item.thumbnail}
+                    onClick={(e) => handleOpenModal(item.thumbnail)}
                   />
                 </Box>
                 <Box
@@ -107,19 +144,22 @@ export const Products = () => {
                   <Button
                     onClick={() => dispatch(addToCart(item))}
                     disabled={
-                      cartItems.filter((cartItem) => cartItem.id === item.id).length > 0
-                      ? cartItems.filter((cartItem) => cartItem.id === item.id)[0].quantity >= item.stock
-                          :false
+                      cartItems.filter((cartItem) => cartItem.id === item.id)
+                        .length > 0
+                        ? cartItems.filter(
+                            (cartItem) => cartItem.id === item.id
+                          )[0].quantity >= item.stock
+                        : false
                     }
                   >
-                    Add to Cart{" "}
+                    Add to Cart{" ("}
                     {cartItems.filter((cartItem) => cartItem.id === item.id)
                       .length > 0
                       ? cartItems.filter(
                           (cartItem) => cartItem.id === item.id
                         )[0].quantity
                       : 0}
-                    &nbsp;of {item.stock}
+                    {")"}
                   </Button>
                 </Box>
                 <Box

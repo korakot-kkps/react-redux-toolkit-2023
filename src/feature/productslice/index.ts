@@ -1,7 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-
 // const data = [
 //   {
 //     name: "Product 1",
@@ -54,7 +52,28 @@ export const callProductListApi = createAsyncThunk(
       console.log(error);
     }
   }
-); 
+);
+
+export const callUpdateProductApi = createAsyncThunk(
+  "/product/callupdateproductapi",
+  async (thunkAPI) => {
+    try {
+      const apiResponse = await fetch("https://dummyjson.com/products/1", {
+        method: "PUT" /* or PATCH */,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "iPhone Galaxy +11",
+        }),
+      });
+      const result = await apiResponse.json();
+      // console.log("callUpdateProductApi response");
+      // console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 const productSlice = createSlice({
   //name
@@ -76,13 +95,30 @@ const productSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(callProductListApi.fulfilled, (state, action) => {
-      console.log(action);
+      // console.log(action);
       const { payload } = action;
       const { products } = payload;
       state.isLoading = false;
       state.productList = products;
     });
     builder.addCase(callProductListApi.rejected, (state) => {
+      state.isLoading = false;
+    });
+
+    builder.addCase(callUpdateProductApi.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(callUpdateProductApi.fulfilled, (state, action) => {
+      console.log("callUpdateProductApi");
+      console.log(action);
+      const { payload } = action;
+      // const { products } = payload;
+      state.isLoading = false; 
+      //todo:korakot - update local state data *for example
+      let updateItemIndex = state.productList.findIndex(x => x.id = payload.id);
+      state.productList[updateItemIndex] = payload; 
+    });
+    builder.addCase(callUpdateProductApi.rejected, (state) => {
       state.isLoading = false;
     });
   },
